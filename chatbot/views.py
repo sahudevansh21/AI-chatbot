@@ -4,23 +4,25 @@ from google import genai
 from google.genai import types
 import os
 
-# Load API key from .env file
+# Load API key: check environment variable first (Vercel), then .env file (local)
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-env_path = BASE_DIR / '.env'
 
-# Read .env file
-GEMINI_API_KEY = None
-if env_path.exists():
-    with open(env_path) as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith('GEMINI_API_KEY='):
-                GEMINI_API_KEY = line.split('=', 1)[1]
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+
+# Fallback: read from .env file for local development
+if not GEMINI_API_KEY:
+    env_path = BASE_DIR / '.env'
+    if env_path.exists():
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith('GEMINI_API_KEY='):
+                    GEMINI_API_KEY = line.split('=', 1)[1]
 
 if not GEMINI_API_KEY:
-    raise Exception("GEMINI_API_KEY not found in .env file")
+    raise Exception("GEMINI_API_KEY not found in environment variables or .env file")
 
 # Configure Gemini client
 client = genai.Client(api_key=GEMINI_API_KEY)

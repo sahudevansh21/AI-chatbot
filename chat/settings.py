@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '^o^9#3^gc5h7iraqq7oj8p)w$btho(vi9ct2m7#-*%eo(t1#2t'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '^o^9#3^gc5h7iraqq7oj8p)w$btho(vi9ct2m7#-*%eo(t1#2t')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+]
 
 
 # Application definition
