@@ -126,3 +126,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Use cookie-based sessions (no database needed — works on Vercel's read-only filesystem)
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_HTTPONLY = True
+
+# Disable database if running on Vercel (read-only filesystem)
+if os.environ.get('VERCEL'):
+    DATABASES = {}
+
